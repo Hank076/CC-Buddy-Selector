@@ -57,7 +57,7 @@ jobs:
             dist/*.zip
           if-no-files-found: error
 
-    release:
+  release:
     name: Create GitHub Release
     runs-on: ubuntu-latest
     needs: build
