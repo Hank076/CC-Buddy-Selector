@@ -1,0 +1,29 @@
+{
+  "name": "cc-buddy-selector",
+  "version": "0.1.0",
+  "description": "An open-source desktop tool for finding, filtering, previewing, and applying code buddies.",
+  "main": "src/main/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build:mac": "electron-builder --mac",
+    "build:win": "electron-builder --win",
+    "build:all": "electron-builder --mac --win"
+  },
+  "keywords": [
+    "buddy-selector",
+    "companion-tool",
+    "electron",
+    "desktop-app",
+    "open-source",
+    "javascript",
+    "windows",
+    "macos"
+  ],
+  "author": "",
+  "license": "MIT",
+  "type": "commonjs",
+  "devDependencies": {
+    "electron": "^41.1.1",
+    "electron-builder": "^26.8.1"
+  }
+}

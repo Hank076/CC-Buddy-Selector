@@ -1,0 +1,47 @@
+appId: com.community.cc-buddy-selector
+productName: CC Buddy Selector
+directories:
+  output: dist
+
+files:
+  - src/**/*
+  - assets/**/*
+  - "!**/*.map"
+
+mac:
+  category: public.app-category.utilities
+  icon: assets/macos/icon.icns
+  hardenedRuntime: false
+  extraResources:
+    - from: bin
+      to: bin
+      filter:
+        - bun-x64
+        - bun-aarch64
+  target:
+    - target: dmg
+      arch: [x64, arm64]
+    - target: zip
+      arch: [x64, arm64]
+
+win:
+  icon: assets/windows/icon.ico
+  requestedExecutionLevel: asInvoker
+  extraResources:
+    - from: bin
+      to: bin
+      filter:
+        - bun.exe
+  target:
+    - target: nsis
+      arch: [x64]
+    - target: portable
+      arch: [x64]
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+
+linux:
+  target: AppImage
+  category: Utility

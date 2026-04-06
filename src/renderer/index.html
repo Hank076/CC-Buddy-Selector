@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html class="dark" lang="zh-TW">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; worker-src 'self' blob:; img-src 'self' data:; connect-src 'none'">
+    <title>CC Buddy Selector</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="styles.css">
+    <script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "on-surface": "#e5e2e1",
+                "surface-container-highest": "#353534",
+                "outline": "#849495",
+                "primary-fixed": "#7df4ff",
+                "surface-tint": "#00dbe9",
+                "on-secondary": "#5b005b",
+                "background": "#131313",
+                "tertiary": "#e1ffd1",
+                "on-primary-fixed-variant": "#004f54",
+                "primary-fixed-dim": "#00dbe9",
+                "surface-variant": "#353534",
+                "error-container": "#93000a",
+                "tertiary-fixed-dim": "#2ae500",
+                "surface-dim": "#131313",
+                "surface-container-low": "#1c1b1b",
+                "on-tertiary-container": "#106e00",
+                "secondary-fixed-dim": "#ffabf3",
+                "on-tertiary-fixed": "#022100",
+                "primary": "#dbfcff",
+                "secondary-container": "#fe00fe",
+                "tertiary-fixed": "#79ff5b",
+                "surface-container-lowest": "#0e0e0e",
+                "on-primary-fixed": "#002022",
+                "on-error": "#690005",
+                "on-secondary-fixed-variant": "#810081",
+                "outline-variant": "#3b494b",
+                "inverse-on-surface": "#313030",
+                "surface-bright": "#3a3939",
+                "surface-container-high": "#2a2a2a",
+                "inverse-primary": "#006970",
+                "on-primary": "#00363a",
+                "surface-container": "#201f1f",
+                "on-tertiary": "#053900",
+                "on-tertiary-fixed-variant": "#095300",
+                "surface": "#131313",
+                "tertiary-container": "#33fb0a",
+                "primary-container": "#00f0ff",
+                "on-surface-variant": "#b9cacb",
+                "secondary-fixed": "#ffd7f5",
+                "error": "#ffb4ab",
+                "secondary": "#ffabf3",
+                "on-secondary-container": "#500050",
+                "inverse-surface": "#e5e2e1",
+                "on-secondary-fixed": "#380038",
+                "on-background": "#e5e2e1",
+                "on-primary-container": "#006970",
+                "on-error-container": "#ffdad6"
+              },
+              fontFamily: {
+                "headline": ["Fira Code", "monospace"],
+                "body": ["Fira Code", "Space Grotesk", "sans-serif"],
+                "label": ["Fira Code", "monospace"]
+              },
+              borderRadius: {"DEFAULT": "0px", "lg": "0px", "xl": "0px", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body h-screen flex overflow-hidden">
+<div class="flex flex-col lg:flex-row w-full h-full p-4 gap-4 overflow-y-auto lg:overflow-hidden custom-scrollbar">
+    <aside class="w-full lg:w-[380px] flex flex-col gap-4 shrink-0 overflow-y-auto custom-scrollbar pr-1">
+        <!-- System Identity -->
+        <section class="shrink-0">
+            <div class="bg-surface-container-low p-4 border-l-2 border-secondary-container relative h-full">
+                <div class="flex justify-between items-start mb-4">
+                    <h2 class="font-black text-secondary tracking-widest uppercase" data-i18n="status_section">SYSTEM_IDENTITY</h2>
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-1.5 border-r border-outline-variant/30 pr-3">
+                            <div class="dot" id="dot-binary"></div>
+                            <span class="text-[10px] font-mono text-on-surface-variant uppercase tracking-tighter" id="txt-binary">...</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <div class="text-[10px] font-bold text-outline flex items-center gap-1 uppercase tracking-tighter cursor-pointer hover:text-primary transition-colors border-r border-outline-variant/30 pr-3" id="lang-toggle">EN</div>
+                            <a href="https://github.com/Hank076/CC-Buddy-Selector" target="_blank" rel="noopener noreferrer" class="text-[10px] font-bold text-outline uppercase tracking-tighter hover:text-primary transition-colors" id="github-link">GITHUB</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <div class="space-y-4">
+                        <div class="relative">
+                            <label class="absolute -top-2.5 left-2 bg-surface-container-low px-1 text-[9px] text-on-surface-variant font-bold" data-i18n="account_uuid">ACCOUNT_UUID</label>
+                            <div class="field-shell bg-surface-container-highest border border-outline-variant/30 flex justify-between items-center h-9 focus-within:ring-1 focus-within:ring-primary transition-all" id="userId-shell">
+                                <input class="bg-transparent border-none focus:ring-0 w-full text-primary font-mono text-xs px-2" type="text" id="userId" maxlength="36" placeholder=""/>
+                                <button type="button" aria-label="Auto detect user id" class="material-symbols-outlined text-[16px] cursor-pointer hover:text-white transition-colors px-2 mr-2" id="autodetect-btn">search</button>
+                            </div>
+                            <div class="field-hint is-hidden" id="userId-hint" data-i18n="hint_uuid_length">UUID must be exactly 36 characters</div>
+                        </div>
+                        <div class="relative">
+                            <label class="absolute -top-2.5 left-2 bg-surface-container-low px-1 text-[9px] text-on-surface-variant font-bold" data-i18n="salt_value">SALT_VALUE</label>
+                            <div class="field-shell bg-surface-container-highest border border-outline-variant/30 flex justify-between items-center h-9 focus-within:ring-1 focus-within:ring-primary transition-all" id="salt-shell">
+                                <input class="bg-transparent border-none focus:ring-0 w-full text-primary font-mono text-xs px-2" type="text" id="saltInput" maxlength="15" value="friend-2026-401"/>
+                                <button type="button" aria-label="Copy salt value" class="material-symbols-outlined text-[16px] cursor-pointer hover:text-white transition-colors px-2 mr-2" id="copy-salt-btn">content_copy</button>
+                            </div>
+                            <div class="field-hint is-hidden" id="salt-hint" data-i18n="hint_salt_length">SALT must be exactly 15 characters</div>
+                        </div>
+                    </div>
+                    <div class="items-center gap-2 pt-2">
+                        <div class="flex-1 space-y-4">
+                            <div class="relative">
+                                <label class="absolute -top-2.5 left-2 bg-surface-container-low px-1 text-[9px] text-on-surface-variant font-bold" data-i18n="buddy_name">BUDDY_NAME</label>
+                                <input class="w-full bg-surface-container-highest border border-outline-variant/30 text-primary font-bold text-xs h-9 px-2 focus:ring-1 focus:ring-primary focus:border-primary outline-none" type="text" id="buddy-name"/>
+                            </div>
+                            <div class="relative">
+                                <label class="absolute -top-2.5 left-2 bg-surface-container-low px-1 text-[9px] text-on-surface-variant font-bold" data-i18n="personality">BUDDY_PERSONALITY</label>
+                                <textarea class="w-full bg-surface-container-highest border border-outline-variant/30 text-tertiary text-[11px] italic p-2 focus:ring-1 focus:ring-primary focus:border-primary outline-none resize-none" rows="3" id="buddy-pers"></textarea>
+                            </div>
+                            <button type="button" class="w-full mt-2 py-2 flex items-center justify-center gap-2 border btn-accent transition-all group disabled:opacity-30 disabled:cursor-not-allowed disabled:grayscale" id="btn-update-info" disabled>
+                                <span class="material-symbols-outlined text-lg group-hover:scale-110 transition-transform">save</span>
+                                <span class="text-[12px] font-black tracking-[0.2em] uppercase" data-i18n="btn_update_info">SAVE_CHANGES</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Selected Buddy Stats -->
+        <section class="shrink-0" id="patch-preview-zone">
+            <div class="bg-surface-container-low border-l-2 border-primary-container p-3 h-full flex flex-col min-h-[260px]">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xs font-black text-primary tracking-widest uppercase" data-i18n="selected_buddy_header">SELECTED_BUDDY</h2>
+                    <span class="text-[9px] px-2 py-0.5 bg-primary/10 text-primary uppercase font-bold is-hidden" id="preview-shiny" data-i18n="shiny_label">SELECTED_SHINY</span>
+                </div>
+                
+                <div id="patch-content" class="is-hidden flex-1 flex flex-col space-y-6">
+                    <div class="flex flex-row gap-4 items-center">
+                        <div class="flex flex-col items-center">
+                            <div class="text-[10px] font-black text-warning mb-1 is-hidden" id="preview-shiny-tag">✨ SHINY ✨</div>
+                            <pre class="card-sprite" id="preview-sprite">  -+- 
+  (o o)
+ /( v )\</pre>
+                        </div>
+                        <div class="flex-1 space-y-1 min-w-0">
+                            <div class="mb-2 border-b border-outline-variant/20 pb-1 flex justify-between items-center gap-2">
+                                <h3 class="text-[12px] font-black text-primary tracking-tighter uppercase truncate" id="preview-buddy-species">AXOLOTL_SPECTRE</h3>
+                                <div class="text-[10px] font-mono shrink-0" id="preview-rarity">★★★★★</div>
+                            </div>
+                            <!-- Stats bars -->
+                            <div class="flex items-center gap-1">
+                                <span class="w-16 text-[10px] font-bold uppercase tracking-tighter text-on-surface-variant shrink-0" data-i18n="debugging">DEBUGGING</span>
+                                <div class="flex-1 h-1 bg-surface-container-highest">
+                                    <div class="h-full bg-primary stat-bar-fill" id="bar-deb"></div>
+                                </div>
+                                <span class="w-6 text-right text-[10px] font-mono text-primary" id="s-deb">0</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <span class="w-16 text-[10px] font-bold uppercase tracking-tighter text-on-surface-variant shrink-0" data-i18n="patience">PATIENCE</span>
+                                <div class="flex-1 h-1 bg-surface-container-highest">
+                                    <div class="h-full bg-primary stat-bar-fill" id="bar-pat"></div>
+                                </div>
+                                <span class="w-6 text-right text-[10px] font-mono text-primary" id="s-pat">0</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <span class="w-16 text-[10px] font-bold uppercase tracking-tighter text-on-surface-variant shrink-0" data-i18n="chaos">CHAOS</span>
+                                <div class="flex-1 h-1 bg-surface-container-highest">
+                                    <div class="h-full bg-secondary stat-bar-fill" id="bar-cha"></div>
+                                </div>
+                                <span class="w-6 text-right text-[10px] font-mono text-primary" id="s-cha">0</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <span class="w-16 text-[10px] font-bold uppercase tracking-tighter text-on-surface-variant shrink-0" data-i18n="wisdom">WISDOM</span>
+                                <div class="flex-1 h-1 bg-surface-container-highest">
+                                    <div class="h-full bg-tertiary stat-bar-fill" id="bar-wis"></div>
+                                </div>
+                                <span class="w-6 text-right text-[10px] font-mono text-primary" id="s-wis">0</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <span class="w-16 text-[10px] font-bold uppercase tracking-tighter text-on-surface-variant shrink-0" data-i18n="snark">SNARK</span>
+                                <div class="flex-1 h-1 bg-surface-container-highest">
+                                    <div class="h-full bg-gradient-to-r from-secondary to-secondary-container stat-bar-fill" id="bar-snk"></div>
+                                </div>
+                                <span class="w-6 text-right text-[10px] font-mono text-primary" id="s-snk">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-auto">
+                        <button type="button" class="w-full py-2 flex items-center justify-center gap-2 border border-primary/40 text-primary hover:bg-primary/10 transition-all group" id="btn-patch-now" aria-busy="false">
+                            <span class="material-symbols-outlined text-base group-hover:scale-110 transition-transform patch-icon" id="patch-icon">cached</span>
+                            <span class="text-[12px] font-black tracking-[0.2em] uppercase" data-i18n="btn_patch_now">INJECT_PATCH</span>
+                        </button>
+                        <div id="patch-status" class="patch-status is-hidden" aria-live="polite">
+                            <span id="patch-status-text" data-i18n="patch_status_working">Applying patch, please wait</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="patch-hint" data-i18n="sel_hint" class="flex-1 flex items-center justify-center text-on-surface-variant text-[11px] uppercase tracking-widest text-center border border-outline-variant/10 border-dashed">
+                    Select a buddy to preview and apply
+                </div>
+            </div>
+        </section>
+
+        <!-- Archive Management -->
+        <section class="shrink-0">
+            <div class="bg-surface-container-low border-l-2 border-tertiary-container h-full p-3 flex flex-col">
+                <div class="flex justify-between items-center mb-2 shrink-0">
+                    <h2 class="text-xs font-black text-tertiary tracking-widest uppercase" data-i18n="backup_mgmt_header">BACKUP_MANAGEMENT</h2>
+                </div>
+                <div class="text-[10px] text-on-surface-variant font-mono leading-relaxed mb-2 shrink-0 flex items-center gap-2">
+                    <div class="dot" id="dot-backup"></div>
+                    <span id="txt-backup">...</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2 mt-auto">
+                    <button type="button" class="py-2 border border-outline-variant text-[12px] font-bold hover:bg-surface-container-highest transition-colors uppercase" id="btn-restore" data-i18n="btn_restore">RESTORE_FROM_BACKUP</button>
+                    <button type="button" class="py-2 border border-error/40 text-error text-[12px] font-bold hover:bg-error/10 transition-colors uppercase is-hidden" id="btn-delete-backup" data-i18n="btn_delete_backup">DELETE_BACKUP</button>
+                </div>
+            </div>
+        </section>
+    </aside>
+
+    <!-- Main Area -->
+    <main class="flex-1 flex flex-col min-h-[600px] lg:min-h-0 bg-surface-container-low border border-outline-variant/10 relative">
+        <header class="p-6 border-b border-outline-variant/10 shrink-0">
+            <div class="grid grid-cols-1 xl:grid-cols-[18rem_minmax(0,1fr)] items-start gap-6">
+                <div class="space-y-1 min-w-0 xl:min-w-[260px] flex flex-col relative">
+                    <div class="flex items-center justify-between gap-3">
+                        <h2 class="text-xl font-black text-primary tracking-widest uppercase whitespace-nowrap" data-i18n="results">BUDDY_DISCOVERY</h2>
+                        <button type="button" id="debug-toggle" class="debug-toggle" aria-label="Debug info" aria-expanded="false" aria-controls="debug-panel" data-i18n-aria-label="debug_toggle">i</button>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <span class="text-[10px] text-on-surface-variant uppercase tracking-widest whitespace-nowrap" id="result-count">0 matches</span>
+                        <div id="progress" class="is-hidden flex items-center gap-2 shrink-0 h-4">
+                            <div class="w-32 h-1 bg-surface-container-highest">
+                                <div class="h-full bg-primary progress-fill" id="progress-fill" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Search progress"></div>
+                            </div>
+                            <span class="text-[10px] text-primary font-mono" id="progress-text">0%</span>
+                        </div>
+                    </div>
+                    <div class="text-[10px] text-outline font-mono tracking-wide uppercase min-h-[14px]" id="search-metrics" aria-live="polite"></div>
+                    <section id="debug-panel" class="debug-panel is-hidden" aria-live="polite">
+                        <div class="debug-panel-header">
+                            <h3 class="debug-panel-title" data-i18n="debug_title">Runtime Debug</h3>
+                        </div>
+                        <dl class="debug-list">
+                            <div class="debug-row">
+                                <dt data-i18n="debug_hash_engine">Hash Engine</dt>
+                                <dd id="debug-hash-engine">unknown</dd>
+                            </div>
+                            <div class="debug-row">
+                                <dt data-i18n="debug_search_engine">Search Engine</dt>
+                                <dd id="debug-search-engine">unknown</dd>
+                            </div>
+                            <div class="debug-row">
+                                <dt data-i18n="debug_bun_available">Bun Available</dt>
+                                <dd id="debug-bun-available">unknown</dd>
+                            </div>
+                            <div class="debug-row">
+                                <dt data-i18n="debug_claude_binary">Claude Binary</dt>
+                                <dd id="debug-claude-binary">unknown</dd>
+                            </div>
+                            <div class="debug-row">
+                                <dt data-i18n="debug_platform">Platform</dt>
+                                <dd id="debug-platform">unknown</dd>
+                            </div>
+                            <div class="debug-row">
+                                <dt data-i18n="debug_bun_path">Bun Path</dt>
+                                <dd id="debug-bun-path">unknown</dd>
+                            </div>
+                        </dl>
+                    </section>
+                </div>
+                <div class="flex flex-col gap-4 w-full xl:min-w-0">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 w-full">
+                        <div class="space-y-1 relative">
+                            <label class="text-[9px] text-on-surface-variant font-black uppercase" data-i18n="species">SPECIES</label>
+                            <select id="f-species" class="w-full bg-surface-container-highest border-none text-[11px] text-primary focus:ring-1 focus:ring-primary h-8 pl-3 pr-8 py-0 appearance-none flex items-center text-left">
+                                <option value="" data-i18n="all">ALL</option>
+                            </select>
+                        </div>
+                        <div class="space-y-1 relative">
+                            <label class="text-[9px] text-on-surface-variant font-black uppercase" data-i18n="rarity">RARITY</label>
+                            <select id="f-rarity" class="w-full bg-surface-container-highest border-none text-[11px] text-primary focus:ring-1 focus:ring-primary h-8 pl-3 pr-8 py-0 appearance-none flex items-center text-left">
+                                <option value="" data-i18n="all">ALL</option>
+                            </select>
+                        </div>
+                        <div class="space-y-1 relative">
+                            <label class="text-[9px] text-on-surface-variant font-black uppercase" data-i18n="eyes">EYES</label>
+                            <select id="f-eyes" class="w-full bg-surface-container-highest border-none text-[11px] text-primary focus:ring-1 focus:ring-primary h-8 pl-3 pr-8 py-0 appearance-none flex items-center text-left">
+                                <option value="" data-i18n="all">ALL</option>
+                            </select>
+                        </div>
+                        <div class="space-y-1 relative">
+                            <label class="text-[9px] text-on-surface-variant font-black uppercase" data-i18n="hat">HAT</label>
+                            <select id="f-hat" class="w-full bg-surface-container-highest border-none text-[11px] text-primary focus:ring-1 focus:ring-primary h-8 pl-3 pr-8 py-0 appearance-none flex items-center text-left">
+                                <option value="" data-i18n="all">ALL</option>
+                            </select>
+                        </div>
+                        <div class="flex flex-col justify-end col-span-2 sm:col-span-1 gap-1">
+                            <label class="flex items-center gap-2 cursor-pointer group mb-0.5">
+                                <div class="relative flex items-center">
+                                    <input type="checkbox" id="f-shiny" class="peer h-4 w-4 appearance-none border border-outline-variant/30 bg-surface-container-highest checked:bg-primary/20 checked:border-primary transition-all cursor-pointer"/>
+                                    <span class="material-symbols-outlined absolute text-[12px] text-primary opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none left-0.5">done</span>
+                                </div>
+                                <span class="text-[9px] font-black text-on-surface-variant group-hover:text-primary transition-colors uppercase tracking-widest whitespace-nowrap">✨ SHINY</span>
+                            </label>
+                            <div class="flex gap-1">
+                                <button type="button" id="search-btn" disabled class="flex-1 h-8 flex items-center justify-center border border-primary/60 text-primary hover:bg-primary/10 transition-all font-black text-[12px] uppercase tracking-widest disabled:opacity-30 disabled:cursor-not-allowed" data-i18n="btn_search">SEARCH</button>
+                                <button type="button" id="stop-btn" class="is-hidden flex-1 h-8 flex items-center justify-center border border-error text-error hover:bg-error/10 transition-all font-black text-[11px] uppercase tracking-widest" data-i18n="btn_stop">STOP</button>
+                                <button type="button" id="reset-filters-btn" class="w-8 h-8 flex items-center justify-center border border-outline-variant/30 text-on-surface-variant hover:bg-surface-container-high transition-all active:scale-95 shrink-0" title="Reset Filters" data-i18n-aria-label="btn_reset_filters">
+                                    <span class="material-symbols-outlined text-sm">restart_alt</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Attribute Filters Row -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <label class="text-[10px] text-on-surface-variant font-black uppercase" data-i18n="debugging">DEBUGGING</label>
+                                <span class="text-[10px] font-mono text-primary" id="v-debugging">0</span>
+                            </div>
+                            <input id="f-debugging" class="w-full h-1 bg-surface-container-highest rounded-none appearance-none cursor-pointer" max="100" min="0" type="range" value="0"/>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <label class="text-[10px] text-on-surface-variant font-black uppercase" data-i18n="patience">PATIENCE</label>
+                                <span class="text-[10px] font-mono text-primary" id="v-patience">0</span>
+                            </div>
+                            <input id="f-patience" class="w-full h-1 bg-surface-container-highest rounded-none appearance-none cursor-pointer" max="100" min="0" type="range" value="0"/>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <label class="text-[10px] text-on-surface-variant font-black uppercase" data-i18n="chaos">CHAOS</label>
+                                <span class="text-[10px] font-mono text-secondary" id="v-chaos">0</span>
+                            </div>
+                            <input id="f-chaos" class="w-full h-1 bg-surface-container-highest rounded-none appearance-none cursor-pointer" max="100" min="0" type="range" value="0"/>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <label class="text-[10px] text-on-surface-variant font-black uppercase" data-i18n="wisdom">WISDOM</label>
+                                <span class="text-[10px] font-mono text-tertiary" id="v-wisdom">0</span>
+                            </div>
+                            <input id="f-wisdom" class="w-full h-1 bg-surface-container-highest rounded-none appearance-none cursor-pointer" max="100" min="0" type="range" value="0"/>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <label class="text-[10px] text-on-surface-variant font-black uppercase" data-i18n="snark">SNARK</label>
+                                <span class="text-[10px] font-mono text-secondary-container" id="v-snark">0</span>
+                            </div>
+                            <input id="f-snark" class="w-full h-1 bg-surface-container-highest rounded-none appearance-none cursor-pointer" max="100" min="0" type="range" value="0"/>
+                        </div>
+                    </div>
+                    <!-- 提示訊息移到整個區塊底部 -->
+                    <div id="search-restriction-msg" class="text-[12px] text-error font-bold uppercase tracking-tight min-h-[12px] leading-none px-1"></div>
+                </div>
+            </div>
+        </header>
+        <div class="flex-1 overflow-y-auto p-6 custom-scrollbar bg-surface-dim">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4" id="grid">
+                <!-- Cards will be injected here -->
+            </div>
+            <section id="empty-state-guide" class="mt-4 border border-outline-variant/20 bg-surface-container-low p-4 text-[12px] leading-relaxed text-on-surface-variant">
+                <h3 class="text-[12px] font-black tracking-widest uppercase text-primary mb-3" data-i18n="empty_usage_title"></h3>
+                <ol class="list-decimal pl-5 space-y-2">
+                    <li data-i18n="empty_usage_step1"></li>
+                    <li data-i18n="empty_usage_step2"></li>
+                    <li data-i18n="empty_usage_step3"></li>
+                    <li data-i18n="empty_usage_step4"></li>
+                    <li data-i18n="empty_usage_step5"></li>
+                </ol>
+                <div class="mt-4 border border-error/30 bg-error/10 p-3 text-[12px] leading-relaxed text-error">
+                    <h4 class="font-black uppercase tracking-wider mb-1" data-i18n="empty_disclaimer_title"></h4>
+                    <p data-i18n="empty_disclaimer_body"></p>
+                </div>
+            </section>
+            <div id="sentinel" class="h-4"></div>
+        </div>
+    </main>
+</div>
+
+<div class="toast fixed bottom-6 right-6 p-4 bg-surface-container-highest border-l-4 border-primary text-on-surface text-sm transition-transform z-50" id="toast" role="status" aria-live="polite"></div>
+
+<script src="constants.js"></script>
+<script src="sprites.js"></script>
+<script src="i18n.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
