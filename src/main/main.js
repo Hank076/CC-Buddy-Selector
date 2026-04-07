@@ -4,17 +4,16 @@ const fs = require('fs');
 const os = require('os');
 const { execSync, execFileSync, spawn } = require('child_process');
 const readline = require('readline');
-const { detectUserId, detectClaudePath, hasBackup, detectClaudeVersion } = require('./detector');
+const { detectUserId, detectClaudePath, hasBackup, detectClaudeVersion, CLAUDE_CONFIG_FILE } = require('./detector');
 const { backup, patch, restore, updateBuddyInfo, deleteBackup, detectCurrentSalt } = require('./patcher');
 const { IPC_CHANNELS } = require('../shared/ipc-channels');
-const { DEFAULT_SALT } = require('../renderer/constants');
 
-const CLAUDE_CONFIG_FILE = '.claude.json';
 const BUN_HASH_SCRIPT = 'console.log(Number(BigInt(Bun.hash(process.env.HASH_INPUT)) & 0xFFFFFFFFn))';
 const SEARCH_PROGRESS_PREFIX = 'PROGRESS:';
 const SEARCH_ENTRY_PREFIX = 'BUDDY:';
 const SEARCH_DONE_PREFIX = 'DONE:';
 const SEARCH_ERROR_PREFIX = 'ERROR:';
+let mainWindow = null;
 let cachedClaudePath = null;
 const activeSearches = new Map();
 
@@ -265,11 +264,11 @@ function safeSend(senderEvent, channel, payload) {
 
 function buildSearchScript() {
   const constantsPath = path.join(__dirname, '../renderer/constants.js');
-  let constantsInjected = '';
+  let constantsInjected;
   try {
     constantsInjected = fs.readFileSync(constantsPath, 'utf8');
   } catch (err) {
-    console.error('Failed to read constants.js for bun search injection:', err);
+    throw new Error(`Failed to read constants.js for search script: ${err.message}`);
   }
 
   return `
@@ -355,20 +354,18 @@ function buildSearchScript() {
             salt, species: meta.species, rarity: meta.rarity, eye: meta.eye, hat: meta.hat,
             shiny: meta.shiny, total: stats.total, d: stats.d, p: stats.p, c: stats.c, w: stats.w, s: stats.s
           };
-          const bucket = pool;
-
-          if (bucket.length < TARGET) {
-            bucket.push(entry);
+          if (pool.length < TARGET) {
+            pool.push(entry);
             storedCount++;
             if (entry.total > bestTotal) bestTotal = entry.total;
             process.stdout.write("BUDDY:" + JSON.stringify(entry) + "\\n");
           } else {
             let weakIdx = 0, weakTotal = Infinity;
-            for (let j = 0; j < bucket.length; j++) {
-              if (bucket[j].total < weakTotal) { weakIdx = j; weakTotal = bucket[j].total; }
+            for (let j = 0; j < pool.length; j++) {
+              if (pool[j].total < weakTotal) { weakIdx = j; weakTotal = pool[j].total; }
             }
             if (entry.total > weakTotal) {
-              bucket[weakIdx] = entry;
+              pool[weakIdx] = entry;
               if (entry.total > bestTotal) bestTotal = entry.total;
               process.stdout.write("BUDDY:" + JSON.stringify(entry) + "\\n");
             }

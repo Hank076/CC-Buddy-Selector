@@ -4,13 +4,10 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 const CLAUDE_CONFIG_FILE = '.claude.json';
-const CLAUDE_BACKUP_SUFFIX = '.buddy-bak';
 const CLAUDE_PACKAGE_SEGMENTS = ['@anthropic-ai', 'claude-code'];
 const CLAUDE_ENTRY_CANDIDATES = ['cli.js', 'index.js', path.join('dist', 'cli.js')];
 const WINDOWS_PATH_PREFIX_TOKEN = '%~dp0';
 const COMMAND_TIMEOUT_MS = 5000;
-
-const { DEFAULT_SALT } = require('../renderer/constants');
 
 function readJsonFile(filePath) {
   return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
@@ -193,4 +190,10 @@ function hasBackup(binaryPath) {
   }
 }
 
-module.exports = { detectUserId, detectClaudePath, hasBackup, detectClaudeVersion };
+module.exports = {
+  detectUserId,
+  detectClaudePath,
+  hasBackup,
+  detectClaudeVersion,
+  CLAUDE_CONFIG_FILE,
+};

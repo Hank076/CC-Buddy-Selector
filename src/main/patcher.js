@@ -3,7 +3,7 @@ const os = require('os');
 const path = require('path');
 const { execFileSync } = require('child_process');
 
-const { detectClaudeVersion } = require('./detector');
+const { detectClaudeVersion, CLAUDE_CONFIG_FILE } = require('./detector');
 const { DEFAULT_SALT, SALT_LENGTH } = require('../renderer/constants');
 
 const ASCII_ENCODING = 'ascii';
@@ -57,7 +57,7 @@ function detectCurrentSalt(binaryPath) {
       }
     }
   } catch (e) {
-    // 忽略偵測錯誤，回傳未知狀態
+    console.warn('[patcher:detectCurrentSalt] Salt detection via backup failed:', e.message);
   }
   
   return 'patched-or-other';
